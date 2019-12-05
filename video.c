@@ -21,8 +21,16 @@ static uint8_t rsvd_field_pos;
 
 static uint8_t *video_mem; /* Process (virtual) address to which VRAM is mapped */
 
+static uint8_t *double_buffer;
+
 static unsigned int vram_base; /* VRAM’s physical addresss */
 static unsigned int vram_size; /* VRAM’s size, but you can use the frame-buffer size, instead */
+
+
+void copy_buffer(){
+  memcpy(video_mem, double_buffer, v_res * h_res * (bits_per_pixel / 8));
+}
+
 
 int vg_call_vbe_function(uint8_t function){
   reg86_t reg86;
@@ -96,13 +104,15 @@ void  *(vg_init)(uint16_t mode){
     panic("sys_privctl (ADD_MEM) failed: %d\n", r);
 
   /* Map memory */
-
+  
   video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+
+  double_buffer = malloc(vram_size);
 
   if(video_mem == MAP_FAILED)
     panic("couldn’t map video memory");
 
-    memset(&reg86, 0, sizeof(reg86));
+  memset(&reg86, 0, sizeof(reg86));
 
 
   reg86.ax = 0x4F02;
@@ -181,29 +191,22 @@ int vg_generate_pattern(uint8_t no_rectangles, uint32_t first, uint8_t step){
 }
 
 int set_pixel(uint16_t x,uint16_t y, uint32_t color){
-  
+
   if(x > h_res || y > v_res || x < 0 || y < 0)
     return 1;
 
-  uint8_t *aux_pointer = video_mem;
-  aux_pointer += (h_res * y + x)*(bits_per_pixel / 8);
+  //uint8_t *aux_pointer = double_buffer;
   if(memory_model == 0x04)
-    *aux_pointer = color & 0xFF;
+    *(video_mem + (h_res * y + x)*(bits_per_pixel / 8)) = color & 0xFF;
   else{
-      *(aux_pointer)++ = color & 0xFF;
-      *(aux_pointer)++ = (color >> 8) & 0xFF;
-      *(aux_pointer)++ = (color >> 16) & 0xFF;
+    memcpy(double_buffer + (h_res * y + x)*(bits_per_pixel / 8), &color, (bits_per_pixel / 8));
   }
 
   return 0;
 }
 
 void vg_clean_screen(){
-  uint8_t *aux_pointer = video_mem;
-
-  for(int i=0; i < h_res * v_res * bits_per_pixel / 8; i++){
-      *(aux_pointer)++ = 0x0;
-  }
+  memset(double_buffer, 0, (h_res * v_res)*(bits_per_pixel / 8));
 }
 
 
@@ -217,16 +220,66 @@ int vg_draw_pixmap(xpm_map_t xpm, enum xpm_image_type type, uint16_t x, uint16_t
     panic("Failed to load xpm...");
     return 1;
   }
-
+  //memcpy(video_mem + (h_res * y + x)*(bits_per_pixel / 8), sprite, image.size);
+  
   for(uint32_t j = y; j < y + image.height; j++){
     for(uint32_t i = x; i < x + image.width; i++)
     {
-      if(memory_model == 0x04)
-        set_pixel(i, j, sprite[index]);
+      if(memory_model == 0x04){
+        set_pixel(i, j, sprite[index]);   
+      }
       else{
-        uint32_t color = sprite[index] << red_field_pos; index++;
-        color |= sprite[index] << green_field_pos; index++;
-        color |= sprite[index] <<  blue_field_pos;
+         
+        uint32_t red, green, blue;
+        uint32_t color = 0x0;
+        red = *(sprite)++;
+        green = *(sprite)++;
+        blue = *(sprite)++;
+        color =  red;
+        color = color | (green << 8);
+        color = color | (blue << 16);
+
+        if(color == CHROMA_KEY_GREEN_888) //transparency
+          continue;    
+        set_pixel(i, j, color); 
+      }
+      index++;
+    }
+  }
+  
+  return 0;
+} 
+
+
+int vg_draw_image(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y){
+  
+  uint32_t index = 0;
+  
+  if(sprite == NULL){
+    panic("Failed to load xpm...");
+    return 1;
+  }
+  //memcpy(video_mem + (h_res * y + x)*(bits_per_pixel / 8), sprite, image.size);
+  
+  for(uint32_t j = y; j < y + image.height; j++){
+    for(uint32_t i = x; i < x + image.width; i++)
+    {
+      if(memory_model == 0x04){
+        set_pixel(i, j, sprite[index]);   
+      }
+      else{
+         
+        uint32_t red, green, blue;
+        uint32_t color = 0x0;
+        red = *(sprite)++;
+        green = *(sprite)++;
+        blue = *(sprite)++;
+        color =  red;
+        color = color | (green << 8);
+        color = color | (blue << 16);
+
+        if(color == CHROMA_KEY_GREEN_888) //transparency
+          continue;    
         set_pixel(i, j, color);
       }
       index++;
@@ -234,37 +287,5 @@ int vg_draw_pixmap(xpm_map_t xpm, enum xpm_image_type type, uint16_t x, uint16_t
   }
   
   return 0;
-}
+} 
 
-int vg_get_vbe_controller_info(vg_vbe_contr_info_t *info_p){
-
-  /*mmap_t map_info;
-  VbeInfoBlock info_block;
-	if(lm_alloc(sizeof(info_block), &map_info) == NULL)    return 1;
-
-  info_block.VbeSignature[0] = 'V';
-  info_block.VbeSignature[1] = 'B';
-  info_block.VbeSignature[2] = 'E';
-  info_block.VbeSignature[3] = '2';
-
-  reg86_t reg86;
-  reg86.ah = 0x4F;
-  reg86.al = 0x0;
-  reg86.es = (map_info.phys >> 4) & 0xF000;
-  reg86.di = map_info.phys & 0xFFFF;
-  reg86.intno = 0x10;
-  if(sys_int86(&reg86) == EFAULT){
-    printf("set_vbe_mode(): sys_int86() failed \n");
-    return 1;
-  }
-  if(reg86.ax != 0x0)
-    return 1; 
-  
-  *info_block = *(VbeInfoBlock*)map_info.virt;
-  info_p->VBESignature = info_block.VbeSignature;
-
-  lm_free(&map_info);
-  */
-  return 0;
-  
-}

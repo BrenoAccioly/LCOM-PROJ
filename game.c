@@ -1,6 +1,7 @@
 #include <lcom/lcf.h>
 #include "kbd.h"
 #include "maze.h"
+#include "video.h"
 #include "i8042.h"
 
 static char *maze;
@@ -8,7 +9,7 @@ extern uint8_t kbd_out_buffer_byte;
 
 int runGame(){
   
-  uint8_t irq_kbd;
+  //uint8_t irq_kbd = KBD_IRQ ;
   int32_t ipc_status;
   uint32_t r;
   message msg;
@@ -19,14 +20,15 @@ int runGame(){
 
 
   
-  if(kbd_subscribe_int(&irq_kbd))
-    return 1;
+  //if(kbd_subscribe_int(&irq_kbd))
+    //return 1;
   
   
   maze = (char*)malloc(12 * 9 * sizeof(char));
   generateMaze(maze, 12, 9);
   addKeys(maze, 12, 9);
-  drawMaze(maze, 12, 9);
+  drawMaze(maze, 12, 9); copy_buffer();
+
 
   while(kbd_out_buffer_byte != BREAK_ESC){
     if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
@@ -36,7 +38,7 @@ int runGame(){
     if (is_ipc_notify(ipc_status)) { 
           switch (_ENDPOINT_P(msg.m_source)) {
               case HARDWARE: 	
-                  if (msg.m_notify.interrupts & irq_kbd) { 
+                  if (msg.m_notify.interrupts & KBD_IRQ ) { 
                       kbc_ih();
                       kbd_read_scancode(&two_byte, &make, &size, scancode);
 
@@ -52,8 +54,8 @@ int runGame(){
     } 
   }
 
-  if(kbd_unsubscribe_int())
-    return 1;
+  //if(kbd_unsubscribe_int())
+    //return 1;
 
   return 0;
 }

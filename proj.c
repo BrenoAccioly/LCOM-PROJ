@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
 }
 
 int(proj_main_loop)(int argc, char *argv[]) {
+  //vg_draw_pixmap(cursor, XPM_8_8_8, 10, 10); 
   vg_init(0x118);
   startMenu();
   //runGame();

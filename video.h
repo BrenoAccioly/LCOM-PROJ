@@ -18,16 +18,20 @@ typedef struct {
   uint8_t OemData;
 } VbeInfoBlock;
 
+
+void copy_buffer();
+
 int vg_change_mode(uint16_t mode);
 
 int vg_generate_pattern(uint8_t no_rectangles, uint32_t first, uint8_t step);
 
 int vg_draw_pixmap(xpm_map_t xpm, enum xpm_image_type type, uint16_t x, uint16_t y);
 
+int vg_draw_image(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y);
+
 int set_pixel(uint16_t x,uint16_t y, uint32_t color);
 
 void vg_clean_screen();
 
-int vg_get_vbe_controller_info(vg_vbe_contr_info_t *info_p);
 
 #endif // VIDEO_H_INCLUDED
