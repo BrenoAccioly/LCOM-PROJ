@@ -9,6 +9,14 @@
 
 #define BREAK_ESC       0x81  /* Break Code (Release) of ESC key */
 
+#define MAKE_W          0x11
+
+#define MAKE_A          0x1E
+
+#define MAKE_S          0x1F
+
+#define MAKE_D          0x20
+
 /* addresses */
 
 #define KBD_OUT_BUFFER  0x60  /* Output Buffer */
