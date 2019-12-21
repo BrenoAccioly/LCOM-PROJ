@@ -11,7 +11,7 @@
 extern uint8_t mouse_out_buf_byte;
 extern uint8_t kbd_out_buffer_byte;
 extern uint32_t counter;
-
+uint8_t irq_kbd, irq_timer0;
 int cursorOnButton(struct button b, uint32_t cursor_x, uint32_t cursor_y)
 {
   if(cursor_x  >= b.x && cursor_x <= b.x + b.width)
@@ -28,7 +28,7 @@ void showInitialScreen(){
 
 int startMenu(){
   int32_t irq_mouse;
-  uint8_t irq_kbd, irq_timer0;
+  
   int32_t ipc_status;
   uint32_t r;
   message msg;

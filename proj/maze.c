@@ -6,33 +6,49 @@
 #include <stdlib.h>
 #include <time.h>
 
-void drawMaze(const char *maze, int width, int height) {
+xpm_image_t imageWall;
+uint8_t *wallSprite;
+
+xpm_image_t imageSideWall;
+uint8_t *sideWallSprite;
+
+xpm_image_t imageFloor;
+uint8_t *floorSprite;
+
+xpm_image_t imageKey;
+uint8_t *keySprite;
+
+void initialize_maze(){
+  wallSprite = xpm_load(wall, XPM_8_8_8, &imageWall);
+  sideWallSprite = xpm_load(side_wall, XPM_8_8_8, &imageSideWall);
+  floorSprite = xpm_load(floor, XPM_8_8_8, &imageFloor);
+  keySprite = xpm_load(key, XPM_8_8_8, &imageKey);
+}
+
+void drawMaze(const char *maze, int width, int height, int x_move, int y_move) {
    int x, y;
    for(y = 0; y < height; y++) {
       for(x = 0; x < width; x++) {
          switch(maze[y * width + x]) {
          case 1:  
             if(maze[y * width + x + width] == 1)
-               vg_draw_pixmap(wall, XPM_8_8_8, x*80, y*80);  
+               vg_draw_image(imageWall, wallSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);  
             else
             {
-               vg_draw_pixmap(side_wall, XPM_8_8_8, x*80, y*80);
+               vg_draw_image(imageSideWall, sideWallSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);  
             }
             break;
-         //case 1:  vg_draw_rectangle(x*10, y*10, 10, 10, 0xFFFF);  break;
-         case 3:  vg_draw_rectangle(x*80, y*80, 20, 20, 0xAFF);  break;
-         default: vg_draw_rectangle(x*80, y*80, 80, 80, 0);  break;
+         case 3: 
+            vg_draw_image(imageFloor, floorSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);
+            vg_draw_image(imageKey, keySprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move); 
+          break;
+         default: 
+            vg_draw_image(imageFloor, floorSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);
+         break;
          }
       }
       
    }
-
-   for(x = 0; x < width; x++){
-      //vg_draw_rectangle(x*10, height*10, 10, 10, 0xFFFF);
-   }
-
-   //if(vg_draw_pixmap(wall, XPM_8_8_8, 0, 400) != 0)
-      //return; 
 
 }
 

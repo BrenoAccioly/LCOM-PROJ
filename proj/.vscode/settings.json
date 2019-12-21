@@ -6,18 +6,5 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
-  "files.associations": {
-    "ios": "c",
-    "__functional_base": "c",
-    "__functional_base_03": "c",
-    "__tuple": "c",
-    "chrono": "c",
-    "functional": "c",
-    "limits": "c",
-    "memory": "c",
-    "ratio": "c",
-    "tuple": "c",
-    "type_traits": "c",
-    "utility": "c"
-  },
+  "files.associations": { },
 }
