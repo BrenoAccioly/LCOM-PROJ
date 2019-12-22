@@ -289,3 +289,49 @@ int vg_draw_image(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, 
   return 0;
 } 
 
+int vg_verify_collision(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y, bool *collision){
+   uint32_t index = 0;
+  
+  if(sprite == NULL){
+    panic("Failed to load xpm...");
+    return 1;
+  }
+  for(uint32_t j = y; j < y + image.height; j++){
+    for(uint32_t i = x; i < x + image.width; i++)
+    {
+      if(memory_model == 0x04){
+        set_pixel(i, j, sprite[index]);   
+      }
+      else{
+        uint8_t *aux; 
+        aux = malloc(3);
+        memcpy(aux, video_mem + (h_res * j + i)*(bits_per_pixel / 8),3);
+        uint32_t red, green, blue;
+        uint32_t color = 0x0;
+        red = *(aux)++;
+        green = *(aux)++;
+        blue = *(aux)++;
+        color =  red;
+        color = color | (green << 8);
+        color = color | (blue << 16);
+
+
+        //set_pixel(i, j, (aux[0] << 16 | aux[1] | aux[2]));
+        set_pixel(i, j,  0x633C2A);
+        if(color == 0x633C2A) //wall collision
+        {
+          //vg_clean_screen();
+          *collision = true; 
+          return 1;
+        }
+
+        if(color == CHROMA_KEY_GREEN_888) //transparency
+          continue;    
+        //set_pixel(i, j, color);
+      }
+      index++;
+    }
+  }
+  
+  return 0;
+}

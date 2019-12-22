@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+xpm_image_t imageDoor;
+uint8_t *doorSprite;
+
 xpm_image_t imageWall;
 uint8_t *wallSprite;
 
@@ -19,6 +22,7 @@ xpm_image_t imageKey;
 uint8_t *keySprite;
 
 void initialize_maze(){
+  doorSprite = xpm_load(door, XPM_8_8_8, &imageDoor);
   wallSprite = xpm_load(wall, XPM_8_8_8, &imageWall);
   sideWallSprite = xpm_load(side_wall, XPM_8_8_8, &imageSideWall);
   floorSprite = xpm_load(floor, XPM_8_8_8, &imageFloor);
@@ -37,6 +41,9 @@ void drawMaze(const char *maze, int width, int height, int x_move, int y_move) {
             {
                vg_draw_image(imageSideWall, sideWallSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);  
             }
+            break;
+         case 2:
+            vg_draw_image(imageDoor, doorSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move); 
             break;
          case 3: 
             vg_draw_image(imageFloor, floorSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);
@@ -105,7 +112,7 @@ void generateMaze(char *maze, int width, int height) {
       }
    }
 
-   maze[width/2] = 0;
+   maze[width/2] = 2;
 }
 
 void addKeys(uint8_t *maze, uint32_t width, uint32_t height){
