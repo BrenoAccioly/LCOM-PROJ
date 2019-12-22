@@ -29,6 +29,8 @@ int vg_draw_pixmap(xpm_map_t xpm, enum xpm_image_type type, uint16_t x, uint16_t
 
 int vg_draw_image(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y);
 
+int vg_verify_collision(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y, bool *collision);
+
 int set_pixel(uint16_t x,uint16_t y, uint32_t color);
 
 void vg_clean_screen();
