@@ -192,7 +192,7 @@ int vg_generate_pattern(uint8_t no_rectangles, uint32_t first, uint8_t step){
 
 int set_pixel(uint16_t x,uint16_t y, uint32_t color){
 
-  if(x > h_res || y > v_res || x < 0 || y < 0)
+  if(x > h_res -1|| y > v_res -1|| x < 0 || y < 0)
     return 1;
 
   //uint8_t *aux_pointer = double_buffer;
@@ -268,7 +268,6 @@ int vg_draw_image(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, 
         set_pixel(i, j, sprite[index]);   
       }
       else{
-         
         uint32_t red, green, blue;
         uint32_t color = 0x0;
         red = *(sprite)++;
@@ -296,6 +295,7 @@ int vg_verify_collision(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type 
     panic("Failed to load xpm...");
     return 1;
   }
+  
   for(uint32_t j = y; j < y + image.height; j++){
     for(uint32_t i = x; i < x + image.width; i++)
     {
@@ -317,10 +317,11 @@ int vg_verify_collision(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type 
 
 
         //set_pixel(i, j, (aux[0] << 16 | aux[1] | aux[2]));
-        set_pixel(i, j,  0x633C2A);
+        //set_pixel(i, j,  0x3C2A);
         if(color == 0x633C2A) //wall collision
         {
-          //vg_clean_screen();
+          //vg_draw_rectangle(x, y, image.width, image.height,0xFFFF);
+          //memset(video_mem, 0, (h_res * v_res)*(bits_per_pixel / 8));
           *collision = true; 
           return 1;
         }
@@ -334,4 +335,48 @@ int vg_verify_collision(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type 
   }
   
   return 0;
+}
+
+int vg_verify_death(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y){
+  
+  if(sprite == NULL){
+    panic("Failed to load xpm...");
+    return 1;
+  }
+  
+  for(uint32_t j = y; j < y + image.height; j++){
+    for(uint32_t i = x; i < x + image.width; i++)
+    {
+        uint8_t *aux; 
+        aux = malloc(3);
+        memcpy(aux, video_mem + (h_res * j + i)*(bits_per_pixel / 8),3);
+        uint32_t red, green, blue;
+        uint32_t color = 0x0;
+        red = *(aux)++;
+        green = *(aux)++;
+        blue = *(aux)++;
+        color =  red;
+        color = color | (green << 8);
+        color = color | (blue << 16);
+
+        if(color == 0xC5C5C6) //spike collision
+        {
+          return 0;
+        }
+    }
+  }
+  
+  return 1;
+}
+
+void red_mask(uint32_t red){
+  uint8_t *aux_pointer = double_buffer;
+
+  for(int i=0; i < h_res * v_res; i++){
+      if(*aux_pointer == 0x63)
+        continue;
+      *(aux_pointer)++ += red;
+      aux_pointer++;
+      aux_pointer++;
+  }
 }

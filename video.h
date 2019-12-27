@@ -31,9 +31,12 @@ int vg_draw_image(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, 
 
 int vg_verify_collision(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y, bool *collision);
 
+int vg_verify_death(xpm_image_t image, uint8_t *sprite ,enum xpm_image_type type, uint16_t x, uint16_t y);
+
 int set_pixel(uint16_t x,uint16_t y, uint32_t color);
 
 void vg_clean_screen();
 
+void red_mask(uint32_t red);
 
 #endif // VIDEO_H_INCLUDED
