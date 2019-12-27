@@ -21,15 +21,27 @@ uint8_t *floorSprite;
 xpm_image_t imageKey;
 uint8_t *keySprite;
 
+xpm_image_t imageSpike1;
+uint8_t *spike1Sprite;
+
+xpm_image_t imageSpike2;
+uint8_t *spike2Sprite;
+
+xpm_image_t imageSpike3;
+uint8_t *spike3Sprite;
+
 void initialize_maze(){
   doorSprite = xpm_load(door, XPM_8_8_8, &imageDoor);
   wallSprite = xpm_load(wall, XPM_8_8_8, &imageWall);
   sideWallSprite = xpm_load(side_wall, XPM_8_8_8, &imageSideWall);
   floorSprite = xpm_load(floor, XPM_8_8_8, &imageFloor);
   keySprite = xpm_load(key, XPM_8_8_8, &imageKey);
+  spike1Sprite = xpm_load(spike1, XPM_8_8_8, &imageSpike1);
+  spike2Sprite = xpm_load(spike2, XPM_8_8_8, &imageSpike2);
+  spike3Sprite = xpm_load(spike3, XPM_8_8_8, &imageSpike3);
 }
 
-void drawMaze(const char *maze, int width, int height, int x_move, int y_move) {
+void drawMaze(const char *maze, int width, int height, int x_move, int y_move, uint8_t spike_pos) {
    int x, y;
    for(y = 0; y < height; y++) {
       for(x = 0; x < width; x++) {
@@ -48,10 +60,18 @@ void drawMaze(const char *maze, int width, int height, int x_move, int y_move) {
          case 3: 
             vg_draw_image(imageFloor, floorSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);
             vg_draw_image(imageKey, keySprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move); 
-          break;
+            break;
+         case 4:
+            if(spike_pos == 0)
+               vg_draw_image(imageSpike1, spike1Sprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);
+            else if(spike_pos == 1)
+               vg_draw_image(imageSpike2, spike2Sprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);
+            else
+               vg_draw_image(imageSpike3, spike3Sprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move); 
+            break;
          default: 
             vg_draw_image(imageFloor, floorSprite, XPM_8_8_8, x*80 + x_move, y*80 + y_move);
-         break;
+            break;
          }
       }
       
@@ -128,5 +148,21 @@ void addKeys(uint8_t *maze, uint32_t width, uint32_t height){
     }
     for(uint8_t i = 0; i < 7; i++){
         maze[blankPos[rand() % blankCont]] = 3;
+    }
+}
+
+void addTraps(uint8_t *maze, uint32_t width, uint32_t height){
+   uint32_t blankCont = 0;
+   uint32_t blankPos[width*height];
+    for(uint32_t i = 0; i < width*height; i++){
+        if(maze[i] == 0 && i > width)
+            {
+                blankPos[blankCont] = i;
+                blankCont++;
+            }
+
+    }
+    for(uint8_t i = 0; i < 10; i++){
+        maze[blankPos[rand() % blankCont]] = 4;
     }
 }

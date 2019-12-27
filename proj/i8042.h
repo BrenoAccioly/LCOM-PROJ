@@ -10,12 +10,16 @@
 #define BREAK_ESC       0x81  /* Break Code (Release) of ESC key */
 
 #define MAKE_W          0x11
+#define BREAK_W         0x91
 
 #define MAKE_A          0x1E
+#define BREAK_A         0x9E
 
 #define MAKE_S          0x1F
+#define BREAK_S         0x9F
 
 #define MAKE_D          0x20
+#define BREAK_D         0xA0
 
 /* addresses */
 
