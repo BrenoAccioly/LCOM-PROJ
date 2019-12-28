@@ -11,6 +11,8 @@ struct button{
 
 void showInitialScreen();
 
+void show_date_time();
+
 int startMenu();
 
 #endif // MAINMENU_H_INCLUDED

@@ -151,7 +151,7 @@ void game_result(bool game_win, int32_t time, uint8_t keys){
 
   tickdelay(micros_to_ticks(1000000));
 
-
+  kbd_out_buffer_byte = 0x0;
   while(kbd_out_buffer_byte != BREAK_ESC){
       kbc_ih();
       
