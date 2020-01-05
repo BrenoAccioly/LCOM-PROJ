@@ -39,6 +39,22 @@ int main(int argc, char *argv[]) {
 }
 
 int(proj_main_loop)(int argc, char *argv[]) {
+  //uint8_t c;
+  //FILE *fptr;
+  /*
+  printf("teste 1\n");
+  fptr = fopen("/home/lcom/labs/proj/leaderboard.txt","r");
+  printf("teste 2\n");
+  for(int i = 0; i < 5; i++){
+    for(int j = 0; j < 8; j++){
+        c = fgetc(fptr);
+        //printf("teste3\n");
+        printf("%d ", c);
+        //printf("teste3\n");
+    }
+    printf("\n");
+  }
+  fclose(fptr);*/
   //vg_draw_pixmap(cursor, XPM_8_8_8, 10, 10); 
   vg_init(0x118);
   startMenu();
