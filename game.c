@@ -5,11 +5,14 @@
 #include "i8042.h"
 #include "i8254.h"
 #include "pixelmaps.h"
+#include "char.h"
+#include "game.h"
 
 static char *maze;
 extern uint32_t counter;
 extern uint8_t kbd_out_buffer_byte;
 extern uint8_t irq_timer0, irq_kbd;
+
 
 int disable_interrupts(){
   if(kbd_unsubscribe_int())
@@ -128,6 +131,8 @@ void draw_key_counter(uint8_t keys){
   }
 }
 
+void insert_leaderboard(int32_t time);
+
 void game_result(bool game_win, int32_t time, uint8_t keys){
 
   uint8_t size = 1;
@@ -141,15 +146,102 @@ void game_result(bool game_win, int32_t time, uint8_t keys){
   uint8_t *gameWinSprite = xpm_load(gameWin, XPM_8_8_8, &imageGameWin);
 
   vg_draw_image(imageGameResult, gameResultSprite, XPM_8_8_8, 0, 0);
-  draw_key_counter(keys);
-  draw_timer(time);
-  copy_buffer();
-  tickdelay(micros_to_ticks(1000000));
+  
+  switch(keys){
+    case 1:
+      vg_draw_pixmap(charB_1, XPM_8_8_8, 590, 376);
+      break;
+    case 2:
+      vg_draw_pixmap(charB_2, XPM_8_8_8, 590, 376);
+      break;
+    case 3:
+      vg_draw_pixmap(charB_3, XPM_8_8_8, 590, 376);
+      break;
+    case 4:
+      vg_draw_pixmap(charB_4, XPM_8_8_8, 590, 376);
+      break;
+    case 5:
+      vg_draw_pixmap(charB_5, XPM_8_8_8, 590, 376);
+      break;
+    case 6:
+      vg_draw_pixmap(charB_6, XPM_8_8_8, 590, 376);
+      break;
+    case 7:
+      vg_draw_pixmap(charB_7, XPM_8_8_8, 590, 376);
+      break;
+    default:
+      vg_draw_pixmap(charB_0, XPM_8_8_8, 590, 376);
+      break;
+  }
+
+  switch(time/10){
+    case 1:
+      vg_draw_pixmap(charB_1, XPM_8_8_8, 590, 456);
+      break;
+    case 2:
+      vg_draw_pixmap(charB_2, XPM_8_8_8, 590, 456);
+      break;
+    case 3:
+      vg_draw_pixmap(charB_3, XPM_8_8_8, 590, 456);
+      break;
+    case 4:
+      vg_draw_pixmap(charB_4, XPM_8_8_8, 590, 456);
+      break;
+    case 5:
+      vg_draw_pixmap(charB_5, XPM_8_8_8, 590, 456);
+      break;
+    case 6:
+      vg_draw_pixmap(charB_6, XPM_8_8_8, 590, 456);
+      break;
+    case 7:
+      vg_draw_pixmap(charB_7, XPM_8_8_8, 590, 456);
+      break;
+    case 8:
+      vg_draw_pixmap(charB_8, XPM_8_8_8, 590, 456);
+      break;
+    case 9:
+      vg_draw_pixmap(charB_9, XPM_8_8_8, 590, 456);
+      break;
+    default:
+      vg_draw_pixmap(charB_0, XPM_8_8_8, 590, 456);
+      break;
+  }
+  switch(time%10){
+    case 1:
+      vg_draw_pixmap(charB_1, XPM_8_8_8, 620, 456);
+      break;
+    case 2:
+      vg_draw_pixmap(charB_2, XPM_8_8_8, 620, 456);
+      break;
+    case 3:
+      vg_draw_pixmap(charB_3, XPM_8_8_8, 620, 456);
+      break;
+    case 4:
+      vg_draw_pixmap(charB_4, XPM_8_8_8, 620, 456);
+      break;
+    case 5:
+      vg_draw_pixmap(charB_5, XPM_8_8_8, 620, 456);
+      break;
+    case 6:
+      vg_draw_pixmap(charB_6, XPM_8_8_8, 620, 456);
+      break;
+    case 7:
+      vg_draw_pixmap(charB_7, XPM_8_8_8, 620, 456);
+      break;
+    case 8:
+      vg_draw_pixmap(charB_8, XPM_8_8_8, 620, 456);
+      break;
+    case 9:
+      vg_draw_pixmap(charB_9, XPM_8_8_8, 620, 456);
+      break;
+    default:
+      vg_draw_pixmap(charB_0, XPM_8_8_8, 620, 456);
+      break;
+  }
+
   if(game_win)
       vg_draw_image(imageGameWin, gameWinSprite, XPM_8_8_8, 300, 650);
   copy_buffer();
-
-  tickdelay(micros_to_ticks(1000000));
 
   kbd_out_buffer_byte = 0x0;
   while(kbd_out_buffer_byte != BREAK_ESC){
@@ -158,11 +250,212 @@ void game_result(bool game_win, int32_t time, uint8_t keys){
       kbd_read_scancode(&two_byte, &make, &size, scancode);
 
       if(two_byte)
-          continue; 
+          continue;
       
       tickdelay(micros_to_ticks(DELAY_US));
   } 
+  if(!game_win)
+      insert_leaderboard(99-time);
 
+}
+
+void write_name(uint8_t name[]){
+  for(int i=0; i < 5; i++){
+    switch(name[i])
+    {
+      case 'a':
+        vg_draw_pixmap(charb_a, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'b':
+        vg_draw_pixmap(charb_b, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'c':
+        vg_draw_pixmap(charb_c, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'd':
+        vg_draw_pixmap(charb_d, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'e':
+        vg_draw_pixmap(charb_e, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'f':
+        vg_draw_pixmap(charb_f, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'g':
+        vg_draw_pixmap(charb_g, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'h':
+        vg_draw_pixmap(charb_h, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'i':
+        vg_draw_pixmap(charb_i, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'j':
+        vg_draw_pixmap(charb_j, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'k':
+        vg_draw_pixmap(charb_k, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'l':
+        vg_draw_pixmap(charb_l, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'm':
+        vg_draw_pixmap(charb_m, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'n':
+        vg_draw_pixmap(charb_n, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'o':
+        vg_draw_pixmap(charb_o, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'p':
+        vg_draw_pixmap(charb_p, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'q':
+        vg_draw_pixmap(charb_q, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'r':
+        vg_draw_pixmap(charb_r, XPM_8_8_8, 430 + i*30, 400); break;
+      case 's':
+        vg_draw_pixmap(charb_s, XPM_8_8_8, 430 + i*30, 400); break;
+      case 't':
+        vg_draw_pixmap(charb_t, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'u':
+        vg_draw_pixmap(charb_u, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'v':
+        vg_draw_pixmap(charb_v, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'w':
+        vg_draw_pixmap(charb_w, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'x':
+        vg_draw_pixmap(charb_x, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'y':
+        vg_draw_pixmap(charb_y, XPM_8_8_8, 430 + i*30, 400); break;
+      case 'z':
+        vg_draw_pixmap(charb_z, XPM_8_8_8, 430 + i*30, 400); break;
+      default:
+        break;
+    }
+        
+  }
+} 
+
+int compare_leaders(const void *p1, const void *p2)
+{
+  const struct leader *t1 = (struct leader *)p1;
+  const struct leader *t2 = (struct leader *)p2;
+  return t1->time > t2->time;
+}
+
+void insert_leaderboard(int32_t time)
+{
+  uint8_t size = 1;
+  uint8_t scancode[2];
+  bool make = 0, two_byte = 0;
+  uint8_t pos = 0, c;
+  struct leader player;
+  struct leader leaderboard[6];
+  //uint8_t name[5];
+  xpm_image_t leaderImage;
+  uint8_t *leaderSprite = xpm_load(leaderboard_name, XPM_8_8_8, &leaderImage);
+
+
+  FILE *fptr;
+  fptr = fopen("/home/lcom/labs/proj/leaderboard.txt","r+");
+
+
+  for(int i = 0; i < 5; i++){
+    for(int j = 0; j < 8; j++){
+        c = fgetc(fptr);
+        if(j < 5)
+          leaderboard[i].name[j] = c;    
+        else if(j == 6)
+        {
+          leaderboard[i].time = (c - '0') * 10; 
+        }
+        else if(j == 7)
+        {
+          leaderboard[i].time += c - '0'; 
+        }
+    }
+    c = fgetc(fptr);//c = fgetc(fptr);
+  }
+  fclose(fptr);
+
+  kbd_out_buffer_byte = 0x0;
+
+  while(kbd_out_buffer_byte != BREAK_ESC){
+      kbc_ih();
+      kbd_read_scancode(&two_byte, &make, &size, scancode);
+
+      if(two_byte)
+          continue; 
+      vg_clean_screen();
+      vg_draw_image(leaderImage, leaderSprite, XPM_8_8_8, 0, 0); 
+      
+      if(pos == 5 && kbd_out_buffer_byte == MAKE_ENTER)
+      {
+        //escrever no leaderboard
+        FILE *fptr;
+        fptr = fopen("/home/lcom/labs/proj/leaderboard.txt","w");
+        player.time = time;
+        leaderboard[5] = player;
+        qsort(leaderboard, 6, sizeof(struct leader),compare_leaders);
+        for(int i = 0; i < 5; i++){
+          fprintf(fptr, "%c%c%c%c%c %02d", leaderboard[i].name[0], leaderboard[i].name[1],leaderboard[i].name[2],leaderboard[i].name[3],leaderboard[i].name[4], leaderboard[i].time);
+          if(i < 4)
+            fprintf(fptr, "\r");  
+        }
+        fclose(fptr);
+        break;
+
+      }
+      else if(pos == 5)
+        continue;
+
+      switch(kbd_out_buffer_byte)
+        {
+          case MAKE_A:
+            player.name[pos] = 'a'; pos++; break;
+          case MAKE_B:
+            player.name[pos] = 'b'; pos++; break;
+          case MAKE_C:
+            player.name[pos] = 'c'; pos++; break;   
+          case MAKE_D:
+            player.name[pos] = 'd'; pos++; break;
+          case MAKE_E:
+            player.name[pos] = 'e'; pos++; break;                      
+          case MAKE_F:
+            player.name[pos] = 'f'; pos++; break;
+          case MAKE_G:
+            player.name[pos] = 'g'; pos++; break;            
+          case MAKE_H:
+            player.name[pos] = 'h'; pos++; break;  
+          case MAKE_I:
+            player.name[pos] = 'i'; pos++; break;
+          case MAKE_J:
+            player.name[pos] = 'j'; pos++; break;
+          case MAKE_K:
+            player.name[pos] = 'k'; pos++; break;
+          case MAKE_L:
+            player.name[pos] = 'l'; pos++; break;  
+          case MAKE_M:
+            player.name[pos] = 'm'; pos++; break;  
+          case MAKE_N:
+            player.name[pos] = 'n'; pos++; break;  
+          case MAKE_O:
+            player.name[pos] = 'o'; pos++; break;  
+          case MAKE_P:
+            player.name[pos] = 'p'; pos++; break;  
+          case MAKE_Q:
+            player.name[pos] = 'q'; pos++; break;  
+          case MAKE_R:
+            player.name[pos] = 'r'; pos++; break;                                                    
+          case MAKE_S:
+            player.name[pos] = 's'; pos++; break;
+          case MAKE_T:
+            player.name[pos] = 't'; pos++; break;
+          case MAKE_U:
+            player.name[pos] = 'u'; pos++; break;
+          case MAKE_V:
+            player.name[pos] = 'v'; pos++; break;
+          case MAKE_W:
+            player.name[pos] = 'w'; pos++; break;
+          case MAKE_X:
+            player.name[pos] = 'x'; pos++; break;
+          case MAKE_Y:
+            player.name[pos] = 'y'; pos++; break;
+          case MAKE_Z:
+            player.name[pos] = 'z'; pos++; break;
+          default:
+            break;
+        }
+      write_name(player.name);
+      copy_buffer();
+      tickdelay(micros_to_ticks(DELAY_US));
+  }
 }
 
 int runGame(){
@@ -347,13 +640,13 @@ int runGame(){
                           continue; 
                       else{
                         uint32_t aux = 0;
-                        
-                        /*if(playerStep != 0)
+                        /*
+                        if(playerStep != 0)
                         {
                           if((playerOrientation | 0x80) != kbd_out_buffer_byte)
                             kbd_out_buffer_byte = playerOrientation;
-                        } */        
-
+                        }         
+                        */
                         switch(kbd_out_buffer_byte){
                           case MAKE_W:
                             vg_verify_collision(imagePlayerFront, playerFrontSprite, XPM_8_8_8,1024/2 - 15, 768/2 - 23 - speed, &collision);

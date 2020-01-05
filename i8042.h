@@ -9,6 +9,8 @@
 
 #define BREAK_ESC       0x81  /* Break Code (Release) of ESC key */
 
+#define MAKE_ENTER      0x1C
+
 #define MAKE_W          0x11
 #define BREAK_W         0x91
 
@@ -20,6 +22,29 @@
 
 #define MAKE_D          0x20
 #define BREAK_D         0xA0
+
+#define MAKE_B          0x30
+#define MAKE_C          0x2E
+#define MAKE_E          0x12
+#define MAKE_F          0x21
+#define MAKE_G          0x22
+#define MAKE_H          0x23
+#define MAKE_I          0x17
+#define MAKE_J          0x24
+#define MAKE_K          0x25
+#define MAKE_L          0x26
+#define MAKE_M          0x32
+#define MAKE_N          0x31
+#define MAKE_O          0x18
+#define MAKE_P          0x19
+#define MAKE_Q          0x10
+#define MAKE_R          0x13
+#define MAKE_T          0x14
+#define MAKE_U          0x16
+#define MAKE_V          0x2F
+#define MAKE_X          0x2D
+#define MAKE_Y          0x15
+#define MAKE_Z          0x2C
 
 /* addresses */
 
