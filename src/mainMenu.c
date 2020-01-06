@@ -269,94 +269,125 @@ void leaderboard_menu(){
   uint8_t *zSprite = xpm_load(charb_z, XPM_8_8_8, &imageZ);
 
   uint8_t c;
+  uint32_t previousCharWidth;
   FILE *fptr;
-  fptr = fopen("/home/lcom/labs/proj/leaderboard.txt","r");
+  fptr = fopen("/home/lcom/labs/proj/src/leaderboard.txt","r");
   vg_draw_pixmap(leaderboard_screen,XPM_8_8_8,0,0);
   for(int i = 0; i < 5; i++){
     for(int j = 0; j < 8; j++){
         c = fgetc(fptr);
+        if(j == 0)
+          previousCharWidth = 0;
         if(j > 5)
           j += 4;
         
         switch(c)
         {
           case 'a':
-            vg_draw_image(imageA, aSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            //vg_draw_image(imageA, aSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageA, aSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageA.width;
+
             break;
           case 'b':
-            vg_draw_image(imageB, bSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageB, bSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageB.width;
             break;
           case 'c':
-            vg_draw_image(imageC, cSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageC, cSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += 27;
             break;
           case 'd':
-            vg_draw_image(imageD, dSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageD, dSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageD.width;
             break;
           case 'e':
-            vg_draw_image(imageE, eSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageE, eSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageE.width;
             break;
           case 'f':
-            vg_draw_image(imageF, fSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageF, fSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageF.width;
             break;
           case 'g':
-            vg_draw_image(imageG, gSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageG, gSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageG.width;
             break;
           case 'h':
-            vg_draw_image(imageH, hSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageH, hSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageH.width;
             break;
           case 'i':
-            vg_draw_image(imageI, iSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageI, iSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageI.width;
             break;
           case 'j':
-            vg_draw_image(imageJ, jSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageJ, jSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageJ.width;
             break;
           case 'k':
-            vg_draw_image(imageK, kSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageK, kSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageK.width;
             break;
           case 'l':
-            vg_draw_image(imageL, LSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageL, LSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageL.width;
             break;
           case 'm':
-            vg_draw_image(imageM, mSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageM, mSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageM.width;
             break;
           case 'n':
-            vg_draw_image(imageN, nSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageN, nSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageN.width;
             break;
           case 'o':
-            vg_draw_image(imageO, oSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageO, oSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageO.width;
             break;
           case 'p':
-            vg_draw_image(imageP, pSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageP, pSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageP.width;
             break;
           case 'q':
-            vg_draw_image(imageQ, qSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageQ, qSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageQ.width;
             break;
           case 'r':
-            vg_draw_image(imageR, rSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageR, rSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += 27;
             break;
           case 's':
-            vg_draw_image(imageS, sSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageS, sSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += 19;
             break;
           case 't':
-            vg_draw_image(imageT, tSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageT, tSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageT.width;
             break;
           case 'u':
-            vg_draw_image(imageU, uSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageU, uSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageU.width;
             break;
           case 'v':
-            vg_draw_image(imageV, vSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageV, vSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageV.width;
             break;
           case 'w':
-            vg_draw_image(imageW, wSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageW, wSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageW.width;
             break;
           case 'x':
-            vg_draw_image(imageX, xSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageX, xSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageX.width;
             break;
           case 'y':
-            vg_draw_image(imageY, ySprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageY, ySprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageY.width;
             break;
           case 'z':
-            vg_draw_image(imageZ, zSprite, XPM_8_8_8, 350 + j*30, 290 + i * 62);
+            vg_draw_image(imageZ, zSprite, XPM_8_8_8, 350 + previousCharWidth, 290 + i * 62);
+            previousCharWidth += imageZ.width;
             break;
           case '1':
             vg_draw_pixmap(charB_1, XPM_8_8_8, 350 + j*30, 290 + i * 62);
