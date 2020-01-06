@@ -251,7 +251,7 @@ void game_result(bool game_win, int32_t time, uint8_t keys){
   copy_buffer();
 
   kbd_out_buffer_byte = 0x0;
-  while(kbd_out_buffer_byte != BREAK_ESC){
+  while(kbd_out_buffer_byte != BREAK_ESC && kbd_out_buffer_byte != MAKE_ENTER){
       kbc_ih();
       
       kbd_read_scancode(&two_byte, &make, &size, scancode);
@@ -270,61 +270,62 @@ void game_result(bool game_win, int32_t time, uint8_t keys){
  * \callgraph
  */
 void write_name(uint8_t name[]){
+  uint32_t previousCharWidth = 0;
   for(int i=0; i < 5; i++){
     switch(name[i])
     {
       case 'a':
-        vg_draw_pixmap(charb_a, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_a, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 30; break;
       case 'b':
-        vg_draw_pixmap(charb_b, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_b, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 23; break;
       case 'c':
-        vg_draw_pixmap(charb_c, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_c, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 27; break;
       case 'd':
-        vg_draw_pixmap(charb_d, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_d, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 29; break;
       case 'e':
-        vg_draw_pixmap(charb_e, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_e, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 23;break;
       case 'f':
-        vg_draw_pixmap(charb_f, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_f, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 21; break;
       case 'g':
-        vg_draw_pixmap(charb_g, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_g, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 29; break;
       case 'h':
-        vg_draw_pixmap(charb_h, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_h, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 32;break;
       case 'i':
-        vg_draw_pixmap(charb_i, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_i, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 13; break;
       case 'j':
-        vg_draw_pixmap(charb_j, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_j, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 13; break;
       case 'k':
-        vg_draw_pixmap(charb_k, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_k, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 29; break;
       case 'l':
-        vg_draw_pixmap(charb_l, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_l, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 22; break;
       case 'm':
-        vg_draw_pixmap(charb_m, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_m, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 37; break;
       case 'n':
-        vg_draw_pixmap(charb_n, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_n, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 31; break;
       case 'o':
-        vg_draw_pixmap(charb_o, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_o, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 30; break;
       case 'p':
-        vg_draw_pixmap(charb_p, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_p, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 23; break;
       case 'q':
-        vg_draw_pixmap(charb_q, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_q, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 30; break;
       case 'r':
-        vg_draw_pixmap(charb_r, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_r, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 27; break;
       case 's':
-        vg_draw_pixmap(charb_s, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_s, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 19;break;
       case 't':
-        vg_draw_pixmap(charb_t, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_t, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 23; break;
       case 'u':
-        vg_draw_pixmap(charb_u, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_u, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 28; break;
       case 'v':
-        vg_draw_pixmap(charb_v, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_v, XPM_8_8_8, 430 + previousCharWidth, 400); previousCharWidth += 28;break;
       case 'w':
-        vg_draw_pixmap(charb_w, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_w, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 38; break;
       case 'x':
-        vg_draw_pixmap(charb_x, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_x, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 25; break;
       case 'y':
-        vg_draw_pixmap(charb_y, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_y, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 25; break;
       case 'z':
-        vg_draw_pixmap(charb_z, XPM_8_8_8, 430 + i*30, 400); break;
+        vg_draw_pixmap(charb_z, XPM_8_8_8, 430 + previousCharWidth, 400);previousCharWidth += 25; break;
       default:
         break;
     }
@@ -359,7 +360,7 @@ void insert_leaderboard(int32_t time)
 
 
   FILE *fptr;
-  fptr = fopen("/home/lcom/labs/proj/leaderboard.txt","r+");
+  fptr = fopen("/home/lcom/labs/proj/src/leaderboard.txt","r+");
 
 
   for(int i = 0; i < 5; i++){
@@ -395,7 +396,7 @@ void insert_leaderboard(int32_t time)
       {
         //escrever no leaderboard
         FILE *fptr;
-        fptr = fopen("/home/lcom/labs/proj/leaderboard.txt","w");
+        fptr = fopen("/home/lcom/labs/proj/src/leaderboard.txt","w");
         player.time = time;
         leaderboard[5] = player;
         qsort(leaderboard, 6, sizeof(struct leader),compare_leaders);
