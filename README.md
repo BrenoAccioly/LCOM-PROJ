@@ -2,7 +2,9 @@
 
 FEUP - MIEIC
 
-Participante: Breno Accioly de Barros Pimentel
+Breno Accioly de Barros Pimentel
+
+In this game you must find all keys in a random generated maze within a given time.
 
 [Report](https://github.com/BrenoAccioly/LCOM-PROJ/blob/master/doc/Report.pdf)
 
